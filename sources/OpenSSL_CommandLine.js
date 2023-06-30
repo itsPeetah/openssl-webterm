@@ -1,13 +1,7 @@
 import React from "react";
-
-import { Trans } from "react-i18next";
-import i18next from "./translations";
-
-import XTerm from "./xterm-for-react";
 import WasmWebTerm from "wasm-webterm";
-
+import XTerm from "./xterm-for-react";
 import OpenSSLGUI from "./openssl-gui/OpenSSL_GUI";
-import { Button } from "react-bootstrap";
 
 class CommandLine extends React.Component {
   wasmTerm;
@@ -29,7 +23,7 @@ class CommandLine extends React.Component {
           (
             resolve // using promise + timeout to show
           ) => {
-            this.setLoading(i18next.t("executing command"), () =>
+            this.setLoading("executing command", () =>
               setTimeout(() => resolve(), 20)
             );
           }
@@ -48,38 +42,6 @@ class CommandLine extends React.Component {
     this.wasmTerm.registerJsCommand("echo", async function* (argv) {
       for (const char of argv.join(" ")) yield char;
     });
-
-    // set custom openssl welcome message
-    this.wasmTerm.printWelcomeMessage = () => {
-      return new Promise((resolve) => {
-        let welcomemessage = `\x1b[1;32m
- _ _ _     _      _____             _____ _____ __    \r
-| | | |___| |_   |     |___ ___ ___|   __|   __|  |   \r
-| | | | -_| . |  |  |  | . | -_|   |__   |__   |  |__ \r
-|_____|___|___|  |_____|  _|___|_|_|_____|_____|_____|\r
-                       |_|                            \r
-                \x1b[37m\r`;
-
-        this.wasmTerm
-          .runWasmCommandHeadless("openssl", ["version"], null, (version) => {
-            welcomemessage += "\r\n" + version.output + "\r";
-            welcomemessage +=
-              i18next.t("Compiled to WebAssembly with Emscripten") +
-              ". " +
-              (this.wasmTerm._worker
-                ? i18next.t("Running in WebWorker")
-                : i18next.t("Worker not available")) +
-              ".\r\n\r\n";
-            welcomemessage +=
-              i18next.t("Usage: openssl [command] [params]") + "\r\n\r\n";
-
-            resolve(welcomemessage); // continue execution flow
-          })
-          .catch((e) =>
-            console.error(i18next.t("error while") + " printWelcomeMessage:", e)
-          );
-      });
-    };
   }
 
   render() {
