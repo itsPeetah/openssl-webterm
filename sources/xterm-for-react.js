@@ -4,13 +4,12 @@
  */
 
 import * as React from "react";
-import PropTypes from "prop-types";
 
 import "xterm/css/xterm.css";
 
 // We are using these as types.
 // eslint-disable-next-line no-unused-vars
-import { Terminal, ITerminalOptions, ITerminalAddon } from "xterm";
+import { Terminal } from "xterm";
 
 export default class Xterm extends React.Component {
   /**
@@ -22,12 +21,6 @@ export default class Xterm extends React.Component {
    * XTerm.js Terminal object.
    */
   terminal; // This is assigned in the setupTerminal() which is called from the constructor
-
-  static propTypes = {
-    className: PropTypes.string,
-    options: PropTypes.object,
-    addons: PropTypes.array,
-  };
 
   constructor(props) {
     super(props);
